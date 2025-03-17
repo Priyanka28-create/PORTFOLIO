@@ -1,17 +1,23 @@
-const username = "your-username";  Priyanka28-create
-const repoContainer = document.getElementById("projects");
+document.addEventListener("DOMContentLoaded", async () => {
+    const username = "YOUR_GITHUB_USERNAME"; // Replace with your GitHub username
+    const repoContainer = document.getElementById("projects");
 
-fetch(`https://api.github.com/users/${username}/repos`)
-  .then(response => response.json())
-  .then(repos => {
-    repos.forEach(repo => {
-      const projectDiv = document.createElement("div");
-      projectDiv.classList.add("project");
-      projectDiv.innerHTML = `
-        <h3><a href="${repo.html_url}" target="_blank">${repo.name}</a></h3>
-        <p>${repo.description || "No description available"}</p>
-      `;
-      repoContainer.appendChild(projectDiv);
-    });
-  })
-  .catch(error => console.error("Error fetching repos:", error));
+    try {
+        const response = await fetch(`https://api.github.com/users/${username}/repos`);
+        const repos = await response.json();
+
+        repos.forEach(repo => {
+            const repoCard = document.createElement("div");
+            repoCard.className = "repo-card";
+            repoCard.innerHTML = `
+                <h3>${repo.name}</h3>
+                <p>${repo.description ? repo.description : "No description available"}</p>
+                <a href="${repo.html_url}" target="_blank">View on GitHub</a>
+            `;
+            repoContainer.appendChild(repoCard);
+        });
+    } catch (error) {
+        console.error("Error fetching repositories:", error);
+        repoContainer.innerHTML = "<p>Failed to load projects.</p>";
+    }
+});
